@@ -52,8 +52,6 @@ public class ItemSpawner : MonoBehaviour
     private void ActionOnRelease(Item obj)
     {
         obj.gameObject.SetActive(false);
-        obj.PickUpped = false;
-        obj.Booked = false;
     }
 
     private void DestroyObj(Item obj)

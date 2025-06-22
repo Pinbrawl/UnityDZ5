@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class PickUpper : MonoBehaviour
 {
-    public bool _haveItem;
+    [SerializeField] private Unit _unit;
 
+    private bool _haveItem;
     private Item _item;
 
     public event Action PickUped;
@@ -20,12 +21,11 @@ public class PickUpper : MonoBehaviour
     {
         if(other.TryGetComponent<Item>(out Item item) && _haveItem == false)
         {
-            if(item.PickUpped == false)
+            if(item == _unit.RequiredItem)
             {
                 _item = item;
                 other.transform.position = transform.position;
                 other.transform.SetParent(transform);
-                item.PickUpped = true;
 
                 _haveItem = true;
 
@@ -34,18 +34,19 @@ public class PickUpper : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    public Item GiveItem()
     {
-        if (other.TryGetComponent<Base>(out Base otherBase) && _haveItem)
+        Item item = _item;
+
+        if(item != null)
         {
             _item.transform.SetParent(null);
-            _item.Release();
-
-            otherBase.GetItem();
-
             _haveItem = false;
+            _item = null;
 
             Gived?.Invoke();
         }
+
+        return item;
     }
 }

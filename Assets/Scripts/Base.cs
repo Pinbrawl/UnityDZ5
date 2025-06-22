@@ -1,80 +1,53 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Base : MonoBehaviour
 {
+    [SerializeField] private ItemStorage _storage;
+    [SerializeField] private Scanner _scanner;
     [SerializeField] private List<Unit> _units;
-    [SerializeField] private float _scanRadius;
-    [SerializeField] private float _interval;
 
-    private List<Item> _items;
-    private int _itemsCount;
-
-    public event Action Spawned;
-    public event Action<int> ItemGetting;
+    private List<Item> _bookedItems;
 
     private void Awake()
     {
-        _items = new List<Item>();
-        _itemsCount = 0;
+        _bookedItems = new List<Item>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        StartCoroutine(DoScan());
+        _storage.Got += GetItem;
+        _scanner.Scanned += SendUnits;
     }
 
-    public void GetItem()
+    private void OnDisable()
     {
-        ItemGetting?.Invoke(++_itemsCount);
+        _storage.Got -= GetItem;
+        _scanner.Scanned -= SendUnits;
     }
 
-    private void Scan()
+    private void GetItem(int _, Item item)
     {
-        _items.Clear();
-
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _scanRadius);
-
-        foreach(Collider collider in colliders)
-            if(collider.TryGetComponent<Item>(out Item item))
-                if(item.PickUpped == false && item.Booked == false)
-                    _items.Add(item);
+        _bookedItems.Remove(item);
     }
 
-    private void SendUnits()
+    private void SendUnits(List<Item> items)
     {
+        foreach(Item bookedItem in _bookedItems)
+            items.Remove(bookedItem);
+
         foreach(Unit unit in _units)
         {
             if(unit.Sended == false)
             {
-                foreach(Item item in _items)
+                foreach(Item item in items)
                 {
-                    if(item.PickUpped == false && item.Booked == false)
-                    {
-                        unit.StartGoTo(item.transform);
-                        _items.Remove(item);
-                        item.Booked = true;
-                        break;
-                    }
+                    unit.StartGoToItem(item);
+                    items.Remove(item);
+                    _bookedItems.Add(item);
+                    break;
                 }
             }
-        }
-    }
-
-    private IEnumerator DoScan()
-    {
-        var waitTime = new WaitForSecondsRealtime(_interval);
-
-        while(enabled)
-        {
-            yield return waitTime;
-
-            Scan();
-            SendUnits();
-
-            Spawned?.Invoke();
         }
     }
 }

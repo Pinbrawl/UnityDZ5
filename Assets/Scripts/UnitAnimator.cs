@@ -5,7 +5,7 @@ public class UnitAnimator : MonoBehaviour
 {
     [SerializeField] private Unit _unit;
 
-    private const string RunParameterName = "IsRun";
+    private static readonly int IsRun = Animator.StringToHash("IsRun");
 
     private Animator _animator;
 
@@ -14,8 +14,18 @@ public class UnitAnimator : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        _animator.SetBool(RunParameterName, _unit.Sended);
+        _unit.IsRun += SetRunParameter;
+    }
+
+    private void OnDisable()
+    {
+        _unit.IsRun -= SetRunParameter;
+    }
+
+    private void SetRunParameter(bool isRun)
+    {
+        _animator.SetBool(IsRun, isRun);
     }
 }

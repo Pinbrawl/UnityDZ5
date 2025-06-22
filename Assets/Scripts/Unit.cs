@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,10 +7,14 @@ public class Unit : MonoBehaviour
     [SerializeField] private PickUpper _pickUpper;
     [SerializeField] private Base _base;
     [SerializeField] private float _speed;
+    [SerializeField] private float _rotationSpeed;
 
     private Coroutine _coroutine;
 
     public bool Sended { get; private set; }
+    public Item RequiredItem { get; private set; }
+
+    public event Action<bool> IsRun;
 
     private void Awake()
     {
@@ -28,6 +33,13 @@ public class Unit : MonoBehaviour
         _pickUpper.Gived -= StopGoTo;
     }
 
+    public void StartGoToItem(Item item)
+    {
+        RequiredItem = item;
+
+        StartGoTo(item.transform);
+    }
+
     private void StartGoToBase()
     {
         StartGoTo(_base.transform);
@@ -36,8 +48,9 @@ public class Unit : MonoBehaviour
     private void StopGoTo()
     {
         Sended = false;
+        IsRun?.Invoke(false);
 
-        if(_coroutine != null)
+        if (_coroutine != null)
             StopCoroutine(_coroutine);
     }
 
@@ -46,6 +59,7 @@ public class Unit : MonoBehaviour
         StopGoTo();
 
         Sended = true;
+        IsRun?.Invoke(true);
 
         _coroutine = StartCoroutine(GoTo(obj));
     }
@@ -54,8 +68,9 @@ public class Unit : MonoBehaviour
     {
         while(enabled)
         {
+            Quaternion tempRotation = transform.rotation;
             transform.LookAt(obj);
-            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+            transform.rotation = Quaternion.Euler(0, Mathf.MoveTowardsAngle(tempRotation.eulerAngles.y, transform.rotation.eulerAngles.y, _rotationSpeed * Time.deltaTime), 0);
             Move();
 
             yield return null;

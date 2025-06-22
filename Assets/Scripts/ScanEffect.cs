@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public class ScanEffect : MonoBehaviour
 {
-    [SerializeField] private Base _base;
+    [SerializeField] private Scanner _scanner;
     
     private const string ParameterName = "IsScan";
 
@@ -17,15 +18,15 @@ public class ScanEffect : MonoBehaviour
 
     private void OnEnable()
     {
-        _base.Spawned += Scan;
+        _scanner.Scanned += Scan;
     }
 
     private void OnDisable()
     {
-        _base.Spawned -= Scan;
+        _scanner.Scanned -= Scan;
     }
 
-    private void Scan()
+    private void Scan(List<Item> _)
     {
         _animator.SetBool(ParameterName, true);
 
