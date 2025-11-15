@@ -8,15 +8,15 @@ public class ItemsCountViewer : MonoBehaviour
 
     private void OnEnable()
     {
-        _storage.Got += Print;
+        _storage.CountChanged += Print;
     }
 
     private void OnDisable()
     {
-        _storage.Got -= Print;
+        _storage.CountChanged -= Print;
     }
 
-    private void Print(int count, Item _)
+    private void Print(int count)
     {
         _text.text = count.ToString();
     }

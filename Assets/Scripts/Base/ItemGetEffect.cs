@@ -22,7 +22,7 @@ public class ItemGetEffect : MonoBehaviour
         _itemStorage.Got -= StartEffect;
     }
 
-    private void StartEffect(int _, Item __)
+    private void StartEffect(Item __)
     {
         _particle.Play();
     }

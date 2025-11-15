@@ -7,7 +7,7 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField] private Item _item;
     [SerializeField] private int _poolCapacity;
     [SerializeField] private int _poolMaxSize;
-    [SerializeField] private int _interval;
+    [SerializeField] private float _interval;
     [SerializeField] private Vector2 _baseScale;
 
     private ObjectPool<Item> _pool;
@@ -65,7 +65,7 @@ public class ItemSpawner : MonoBehaviour
         Vector3 randomPosition = new Vector3(Random.Range(-transform.localScale.x, transform.localScale.x), transform.position.y, Random.Range(-transform.localScale.z, transform.localScale.z));
 
         while(randomPosition.x < _baseScale.x && randomPosition.x > -_baseScale.x && randomPosition.y < _baseScale.y && randomPosition.y > -_baseScale.y)
-            randomPosition = new Vector3(Random.Range(-transform.localScale.x, transform.localScale.x), transform.position.y, Random.Range(-transform.localScale.z, transform.localScale.z));
+            randomPosition = new Vector3(Random.Range(-transform.localScale.x / 2, transform.localScale.x / 2), transform.position.y, Random.Range(-transform.localScale.z / 2, transform.localScale.z / 2));
 
         return randomPosition;
     }

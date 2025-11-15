@@ -15,6 +15,8 @@ public class Scanner : MonoBehaviour
     private void Awake()
     {
         _items = new List<Item>();
+
+        transform.localScale = new Vector3(_scanRadius, _scanRadius, _scanRadius);
     }
 
     private void Start()
