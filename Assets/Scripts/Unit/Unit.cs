@@ -5,17 +5,13 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     [SerializeField] private PickUpper _pickUpper;
-    [SerializeField] private float _speed;
-    [SerializeField] private float _rotationSpeed;
-    [SerializeField] private float _errorRatePosition;
-
-    private Coroutine _coroutine;
-
-    public bool Sended { get; private set; }
-    public Item RequiredItem { get; private set; }
+    [SerializeField] private Mover _mover;
 
     public event Action<bool> IsRun;
     public event Action<Unit> ItemPickUpped;
+
+    public bool Sended { get; private set; }
+    public Item RequiredItem { get; private set; }
 
     private void Awake()
     {
@@ -51,42 +47,14 @@ public class Unit : MonoBehaviour
         Sended = false;
         IsRun?.Invoke(false);
 
-        if (_coroutine != null)
-            StopCoroutine(_coroutine);
+        _mover.StopGoTo();
     }
 
     public void StartGoTo(Vector3 obj)
     {
-        StopGoTo();
-
         Sended = true;
         IsRun?.Invoke(true);
 
-        _coroutine = StartCoroutine(GoTo(obj));
-    }
-
-    private IEnumerator GoTo(Vector3 obj)
-    {
-        while(enabled)
-        {
-            if((transform.position.x < obj.x + _errorRatePosition) && (transform.position.x > obj.x - _errorRatePosition) && (transform.position.y < obj.y + _errorRatePosition) && (transform.position.y > obj.y - _errorRatePosition))
-            {
-                StopGoTo();
-            }
-            else
-            {
-                Quaternion tempRotation = transform.rotation;
-                transform.LookAt(obj);
-                transform.rotation = Quaternion.Euler(0, Mathf.MoveTowardsAngle(tempRotation.eulerAngles.y, transform.rotation.eulerAngles.y, _rotationSpeed * Time.deltaTime), 0);
-                Move();
-            }
-
-            yield return null;
-        }
-    }
-
-    private void Move()
-    {
-        transform.Translate(Vector3.forward * Time.deltaTime * _speed);
+        _mover.StartGoTo(obj);
     }
 }

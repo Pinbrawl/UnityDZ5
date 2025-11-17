@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInput))]
 public class CameraZoomer : MonoBehaviour
 {
     [SerializeField] private float _speed;

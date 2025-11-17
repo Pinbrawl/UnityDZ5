@@ -26,12 +26,10 @@ public class Scanner : MonoBehaviour
 
     private void Scan()
     {
-        _items.Clear();
-
         Collider[] colliders = Physics.OverlapSphere(transform.position, _scanRadius);
 
         foreach (Collider collider in colliders)
-            if (collider.TryGetComponent<Item>(out Item item))
+            if (collider.TryGetComponent<Item>(out Item item) && _items.Contains(item) == false)
                 _items.Add(item);
 
         Scanned?.Invoke(_items);

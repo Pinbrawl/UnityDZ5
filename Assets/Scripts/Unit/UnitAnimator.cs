@@ -5,7 +5,7 @@ public class UnitAnimator : MonoBehaviour
 {
     [SerializeField] private Unit _unit;
 
-    private static readonly int IsRun = Animator.StringToHash("IsRun");
+    private static readonly int s_IsRun = Animator.StringToHash("IsRun");
 
     private Animator _animator;
 
@@ -26,6 +26,6 @@ public class UnitAnimator : MonoBehaviour
 
     private void SetRunParameter(bool isRun)
     {
-        _animator.SetBool(IsRun, isRun);
+        _animator.SetBool(s_IsRun, isRun);
     }
 }

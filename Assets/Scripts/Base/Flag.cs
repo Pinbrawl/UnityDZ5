@@ -7,9 +7,6 @@ using UnityEngine.InputSystem;
 public class Flag : MonoBehaviour
 {
     private Camera _camera;
-    public bool IsRaised;
-    public bool CanPut;
-    public bool IsStand;
     private Vector3 _startPosition;
     private Ray _ray;
     private PlayerInput _input;
@@ -17,6 +14,10 @@ public class Flag : MonoBehaviour
 
     public event Action<bool> IsDelivered;
     public event Action<Unit, Transform> UnitHasCome;
+
+    public bool IsRaised { get; private set; }
+    public bool CanPut { get; private set; }
+    public bool IsStand { get; private set; }
 
     private void Awake()
     {
