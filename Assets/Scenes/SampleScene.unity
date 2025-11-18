@@ -19124,6 +19124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _base: {fileID: 6053744215237265247, guid: fcf7bbdab0baec24c8bf96d47a77f48d, type: 3}
   _firstBase: {fileID: 1474981115}
+  _camera: {fileID: 963194227}
 --- !u!4 &1427145694
 Transform:
   m_ObjectHideFlags: 0

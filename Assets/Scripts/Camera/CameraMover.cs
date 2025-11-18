@@ -36,6 +36,6 @@ public class CameraMover : MonoBehaviour
     private void Move()
     {
         Vector3 offset = new Vector3(_moveDirection.x, 0, _moveDirection.y).normalized * _speed;
-        _rigidbody.velocity = new Vector3(Mathf.MoveTowards(_rigidbody.velocity.x, offset.x, _speedBoost * Time.deltaTime), 0, Mathf.MoveTowards(_rigidbody.velocity.z, _rigidbody.velocity.z + offset.z, _speedBoost * Time.deltaTime));
+        _rigidbody.velocity = new Vector3(Mathf.MoveTowards(_rigidbody.velocity.x, _rigidbody.velocity.x + offset.x, _speedBoost * Time.deltaTime), 0, Mathf.MoveTowards(_rigidbody.velocity.z, _rigidbody.velocity.z + offset.z, _speedBoost * Time.deltaTime));
     }
 }

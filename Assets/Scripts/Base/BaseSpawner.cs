@@ -5,6 +5,7 @@ public class BaseSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _base;
     [SerializeField] private Base _firstBase;
+    [SerializeField] private Camera _camera;
 
     private List<Base> _baseList = new List<Base>();
 
@@ -12,6 +13,7 @@ public class BaseSpawner : MonoBehaviour
     {
         _baseList.Add(_firstBase);
         _firstBase.NewBaseSpawning += Spawn;
+        _firstBase.Init(_camera);
     }
 
     private void OnEnable()
@@ -30,6 +32,7 @@ public class BaseSpawner : MonoBehaviour
     {
         Base newBase = Instantiate(_base, transform.position, Quaternion.identity).GetComponent<Base>();
         newBase.AddUnit(unit);
+        newBase.Init(_camera);
         _baseList.Add(newBase);
         newBase.NewBaseSpawning += Spawn;
     }

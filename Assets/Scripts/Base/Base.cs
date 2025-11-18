@@ -50,6 +50,18 @@ public class Base : MonoBehaviour
             unit.ItemPickUpped -= SendToBase;
     }
 
+    public void Init(Camera camera)
+    {
+        _flag.Init(camera);
+    }
+
+    public void AddUnit(Unit unit)
+    {
+        _units.Add(unit);
+        unit.StopGoTo();
+        unit.ItemPickUpped += SendToBase;
+    }
+
     private void ChangePriority(bool isDelivered)
     {
         _priorityOnBase = isDelivered;
@@ -126,12 +138,5 @@ public class Base : MonoBehaviour
         NewBaseSpawning?.Invoke(unit, transform);
         _priorityOnBase = false;
         Destroy(_flagSpawner.gameObject);
-    }
-
-    public void AddUnit(Unit unit)
-    {
-        _units.Add(unit);
-        unit.StopGoTo();
-        unit.ItemPickUpped += SendToBase;
     }
 }

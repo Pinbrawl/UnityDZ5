@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,7 +20,6 @@ public class Flag : MonoBehaviour
 
     private void Awake()
     {
-        _camera = FindObjectOfType(typeof(Camera)).GetComponent<Camera>();
         _input = new PlayerInput();
         _startPosition = transform.position;
 
@@ -55,6 +53,11 @@ public class Flag : MonoBehaviour
                 _myUnit = null;
             }
         }
+    }
+
+    public void Init(Camera camera)
+    {
+        _camera = camera;
     }
 
     public void Raise()
