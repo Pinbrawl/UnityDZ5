@@ -19,7 +19,7 @@ public class PickUpper : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<Item>(out Item item) && _haveItem == false)
+        if(_haveItem == false && other.TryGetComponent(out Item item))
         {
             if(item == _unit.RequiredItem)
             {

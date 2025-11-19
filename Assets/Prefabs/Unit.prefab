@@ -465,12 +465,6 @@ MonoBehaviour:
   - {fileID: 8121163839873211513}
   - {fileID: 976716575183745707}
   - {fileID: 958026588825181211}
-  _renderers:
-  - {fileID: 1175247798382918687}
-  - {fileID: 8862815572660098482}
-  - {fileID: 459209174708814698}
-  _minColorValue: 0.75
-  _maxColorValue: 1
 --- !u!95 &7495963683654721843
 Animator:
   serializedVersion: 5

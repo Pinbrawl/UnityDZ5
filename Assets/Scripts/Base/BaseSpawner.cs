@@ -18,8 +18,8 @@ public class BaseSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach (Base base1 in _baseList)
-            base1.UnitHasComeToFlag += Spawn;
+        foreach (Base @base in _baseList)
+            @base.UnitHasComeToFlag += Spawn;
     }
 
     private void OnDisable()
@@ -28,8 +28,9 @@ public class BaseSpawner : MonoBehaviour
             base1.UnitHasComeToFlag -= Spawn;
     }
 
-    private void Spawn(Unit unit, Transform transform)
+    private void Spawn(Unit unit, Transform transform, FlagMover flagManager)
     {
+        Destroy(flagManager.gameObject);
         Base newBase = Instantiate(_base, transform.position, Quaternion.identity).GetComponent<Base>();
         newBase.AddUnit(unit);
         newBase.Init(_camera);

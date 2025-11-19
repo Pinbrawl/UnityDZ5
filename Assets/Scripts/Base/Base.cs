@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class Base : MonoBehaviour
     [SerializeField] private ItemStorage _itemStorage;
     [SerializeField] private UnitSpawner _unitSpawner;
     [SerializeField] private Flag _flag;
-    [SerializeField] private FlagManager _flagManager;
+    [SerializeField] private FlagMover _flagManager;
     [SerializeField] private List<Unit> _units;
     [SerializeField] private int _unitPrice;
     [SerializeField] private int _basePrice;
@@ -19,7 +20,7 @@ public class Base : MonoBehaviour
     private bool _priorityOnBase;
 
     public event Action<int> Purchased;
-    public event Action<Unit, Transform> UnitHasComeToFlag;
+    public event Action<Unit, Transform, FlagMover> UnitHasComeToFlag;
 
     private void Awake()
     {
@@ -32,7 +33,7 @@ public class Base : MonoBehaviour
         _flagManager.IsDelivered += ChangePriority;
         _storage.Got += GetItem;
         _scanner.Scanned += SendUnits;
-        _itemStorage.CountChanged += CheckBalance;
+        _itemStorage.CountChanged += TryBuy;
         _flag.UnitHasCome += OnUnitHasComeToFlag;
 
         foreach (Unit unit in _units)
@@ -72,39 +73,51 @@ public class Base : MonoBehaviour
         unit.StartGoTo(transform.position);
     }
 
-    private void CheckBalance(int count)
+    private void TryBuy(int count)
     {
         if ((_priorityOnBase == false || _units.Count < _numberOfUnitsForNewBase) && count >= _unitPrice)
         {
-            Purchased?.Invoke(_unitPrice);
-
-            Unit unit = _unitSpawner.Spawn();
-            _units.Add(unit);
-            unit.ItemPickUpped += SendToBase;
+            BuyUnit();
         }
         else if (count >= _basePrice)
         {
-            bool sended = false;
+            StartCoroutine(BuyBase());
+        }
+    }
 
-            while (sended == false)
+    private void BuyUnit()
+    {
+        Purchased?.Invoke(_unitPrice);
+
+        Unit unit = _unitSpawner.Spawn();
+        _units.Add(unit);
+        unit.ItemPickUpped += SendToBase;
+    }
+
+    private IEnumerator BuyBase()
+    {
+        bool sended = false;
+
+        while (sended == false)
+        {
+            foreach (Unit unit in _units)
             {
-                foreach (Unit unit in _units)
+                if (unit.Sended == false)
                 {
-                    if (unit.Sended == false)
-                    {
-                        unit.StartGoTo(_flag.transform.position);
-                        _units.Remove(unit);
-                        _flag.TakeUnit(unit);
-                        unit.ItemPickUpped -= SendToBase;
+                    unit.StartGoTo(_flag.transform.position);
+                    _units.Remove(unit);
+                    _flag.TakeUnit(unit);
+                    unit.ItemPickUpped -= SendToBase;
 
-                        sended = true;
+                    sended = true;
 
-                        Purchased?.Invoke(_basePrice);
+                    Purchased?.Invoke(_basePrice);
 
-                        break;
-                    }
+                    break;
                 }
             }
+
+            yield return null;
         }
     }
 
@@ -135,8 +148,7 @@ public class Base : MonoBehaviour
 
     private void OnUnitHasComeToFlag(Unit unit, Transform transform)
     {
-        UnitHasComeToFlag?.Invoke(unit, transform);
+        UnitHasComeToFlag?.Invoke(unit, transform, _flagManager);
         _priorityOnBase = false;
-        Destroy(_flagManager.gameObject);
     }
 }

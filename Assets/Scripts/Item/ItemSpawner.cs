@@ -16,7 +16,7 @@ public class ItemSpawner : MonoBehaviour
     {
         _pool = new ObjectPool<Item>(
             createFunc: () => InstantiateObj(),
-            actionOnGet: (obj) => ActionOnGet(obj),
+            actionOnGet: (obj) => DoActionOnGet(obj),
             actionOnRelease: (obj) => ActionOnRelease(obj),
             actionOnDestroy: (obj) => DestroyObj(obj),
             collectionCheck: true,
@@ -42,7 +42,7 @@ public class ItemSpawner : MonoBehaviour
         _pool.Release(item);
     }
 
-    private void ActionOnGet(Item obj)
+    private void DoActionOnGet(Item obj)
     {
         obj.gameObject.SetActive(true);
         obj.transform.position = GetRandomPosition();

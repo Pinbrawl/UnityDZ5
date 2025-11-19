@@ -1,9 +1,8 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class FlagManager : MonoBehaviour
+public class FlagMover : MonoBehaviour
 {
     [SerializeField] private Flag _flag;
 
@@ -12,7 +11,6 @@ public class FlagManager : MonoBehaviour
     private PlayerInput _input;
     private Ray _ray;
 
-    public event Action Spawned;
     public event Action<bool> IsDelivered;
 
     public bool IsRaised { get; private set; }
@@ -21,7 +19,6 @@ public class FlagManager : MonoBehaviour
 
     private void Awake()
     {
-        _camera = FindObjectOfType(typeof(Camera)).GetComponent<Camera>();
         _input = new PlayerInput();
         _startPosition = _flag.transform.position;
 
@@ -93,7 +90,7 @@ public class FlagManager : MonoBehaviour
 
             foreach(RaycastHit hit in hits)
             {
-                if(hit.collider.TryGetComponent<FlagManager>(out _))
+                if(hit.collider.TryGetComponent<FlagMover>(out _))
                 {
                     Spawn();
                     break;
@@ -104,7 +101,6 @@ public class FlagManager : MonoBehaviour
 
     private void Spawn()
     {
-        Spawned?.Invoke();
         IsStand = false;
         IsRaised = true;
     }

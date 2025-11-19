@@ -2,8 +2,12 @@ using UnityEngine;
 
 public class FlagAnimator : MonoBehaviour
 {
-    [SerializeField] private FlagManager _flagManager;
-    
+    [SerializeField] private FlagMover _flagManager;
+
+    private const string s_IsStand = "IsStand";
+    private const string s_CanPut = "CanPut";
+    private const string s_IsRaised = "IsRaised";
+
     private Animator _animator;
 
     private void Awake()
@@ -13,8 +17,8 @@ public class FlagAnimator : MonoBehaviour
 
     private void Update()
     {
-        _animator.SetBool("IsStand", _flagManager.IsStand);
-        _animator.SetBool("CanPut", _flagManager.CanPut);
-        _animator.SetBool("IsRaised", _flagManager.IsRaised);
+        _animator.SetBool(s_IsStand, _flagManager.IsStand);
+        _animator.SetBool(s_CanPut, _flagManager.CanPut);
+        _animator.SetBool(s_IsRaised, _flagManager.IsRaised);
     }
 }

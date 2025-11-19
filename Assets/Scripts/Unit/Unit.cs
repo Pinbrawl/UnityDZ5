@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class Unit : MonoBehaviour
 {
@@ -21,14 +22,16 @@ public class Unit : MonoBehaviour
     {
         _pickUpper.PickUped += ProcessPickUp;
         _pickUpper.Gived += StopGoTo;
-        _mover.MoveChanged += OnMoveChanged;
+        _mover.MoveStarted += OnMoveStarted;
+        _mover.MoveStoped += OnMoveStoped;
     }
 
     private void OnDisable()
     {
         _pickUpper.PickUped -= ProcessPickUp;
         _pickUpper.Gived -= StopGoTo;
-        _mover.MoveChanged -= OnMoveChanged;
+        _mover.MoveStarted -= OnMoveStarted;
+        _mover.MoveStoped -= OnMoveStoped;
     }
 
     public void StartGoToItem(Item item)
@@ -59,9 +62,15 @@ public class Unit : MonoBehaviour
         ItemPickUpped?.Invoke(this);
     }
 
-    private void OnMoveChanged(bool sended)
+    private void OnMoveStarted()
     {
-        Sended = sended;
-        IsRun?.Invoke(sended);
+        Sended = true;
+        IsRun?.Invoke(true);
+    }
+
+    private void OnMoveStoped()
+    {
+        Sended = false;
+        IsRun?.Invoke(false);
     }
 }

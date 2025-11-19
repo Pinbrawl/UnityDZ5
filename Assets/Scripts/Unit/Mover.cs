@@ -10,21 +10,22 @@ public class Mover : MonoBehaviour
 
     private Coroutine _coroutine;
 
-    public event Action<bool> MoveChanged;
+    public event Action MoveStarted;
+    public event Action MoveStoped;
 
     public void StopGoTo()
     {
         if (_coroutine != null)
             StopCoroutine(_coroutine);
 
-        MoveChanged?.Invoke(false);
+        MoveStoped?.Invoke();
     }
 
     public void StartGoTo(Vector3 obj)
     {
         StopGoTo();
 
-        MoveChanged?.Invoke(true);
+        MoveStarted?.Invoke();
         _coroutine = StartCoroutine(GoTo(obj));
     }
 
