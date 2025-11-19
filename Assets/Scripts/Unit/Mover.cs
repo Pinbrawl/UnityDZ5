@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,16 +10,21 @@ public class Mover : MonoBehaviour
 
     private Coroutine _coroutine;
 
+    public event Action<bool> MoveChanged;
+
     public void StopGoTo()
     {
         if (_coroutine != null)
             StopCoroutine(_coroutine);
+
+        MoveChanged?.Invoke(false);
     }
 
     public void StartGoTo(Vector3 obj)
     {
         StopGoTo();
 
+        MoveChanged?.Invoke(true);
         _coroutine = StartCoroutine(GoTo(obj));
     }
 

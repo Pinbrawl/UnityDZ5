@@ -12,20 +12,20 @@ public class BaseSpawner : MonoBehaviour
     private void Start()
     {
         _baseList.Add(_firstBase);
-        _firstBase.NewBaseSpawning += Spawn;
+        _firstBase.UnitHasComeToFlag += Spawn;
         _firstBase.Init(_camera);
     }
 
     private void OnEnable()
     {
         foreach (Base base1 in _baseList)
-            base1.NewBaseSpawning += Spawn;
+            base1.UnitHasComeToFlag += Spawn;
     }
 
     private void OnDisable()
     {
         foreach (Base base1 in _baseList)
-            base1.NewBaseSpawning -= Spawn;
+            base1.UnitHasComeToFlag -= Spawn;
     }
 
     private void Spawn(Unit unit, Transform transform)
@@ -34,6 +34,6 @@ public class BaseSpawner : MonoBehaviour
         newBase.AddUnit(unit);
         newBase.Init(_camera);
         _baseList.Add(newBase);
-        newBase.NewBaseSpawning += Spawn;
+        newBase.UnitHasComeToFlag += Spawn;
     }
 }

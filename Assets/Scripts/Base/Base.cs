@@ -9,7 +9,7 @@ public class Base : MonoBehaviour
     [SerializeField] private ItemStorage _itemStorage;
     [SerializeField] private UnitSpawner _unitSpawner;
     [SerializeField] private Flag _flag;
-    [SerializeField] private FlagSpawner _flagSpawner;
+    [SerializeField] private FlagManager _flagManager;
     [SerializeField] private List<Unit> _units;
     [SerializeField] private int _unitPrice;
     [SerializeField] private int _basePrice;
@@ -19,7 +19,7 @@ public class Base : MonoBehaviour
     private bool _priorityOnBase;
 
     public event Action<int> Purchased;
-    public event Action<Unit, Transform> NewBaseSpawning;
+    public event Action<Unit, Transform> UnitHasComeToFlag;
 
     private void Awake()
     {
@@ -29,11 +29,11 @@ public class Base : MonoBehaviour
 
     private void OnEnable()
     {
-        _flag.IsDelivered += ChangePriority;
+        _flagManager.IsDelivered += ChangePriority;
         _storage.Got += GetItem;
         _scanner.Scanned += SendUnits;
         _itemStorage.CountChanged += CheckBalance;
-        _flag.UnitHasCome += SpawnNewBase;
+        _flag.UnitHasCome += OnUnitHasComeToFlag;
 
         foreach (Unit unit in _units)
             unit.ItemPickUpped += SendToBase;
@@ -41,10 +41,10 @@ public class Base : MonoBehaviour
 
     private void OnDisable()
     {
-        _flag.IsDelivered -= ChangePriority;
+        _flagManager.IsDelivered -= ChangePriority;
         _storage.Got -= GetItem;
         _scanner.Scanned -= SendUnits;
-        _flag.UnitHasCome -= SpawnNewBase;
+        _flag.UnitHasCome -= OnUnitHasComeToFlag;
 
         foreach (Unit unit in _units)
             unit.ItemPickUpped -= SendToBase;
@@ -52,7 +52,7 @@ public class Base : MonoBehaviour
 
     public void Init(Camera camera)
     {
-        _flag.Init(camera);
+        _flagManager.Init(camera);
     }
 
     public void AddUnit(Unit unit)
@@ -133,10 +133,10 @@ public class Base : MonoBehaviour
         }
     }
 
-    private void SpawnNewBase(Unit unit, Transform transform)
+    private void OnUnitHasComeToFlag(Unit unit, Transform transform)
     {
-        NewBaseSpawning?.Invoke(unit, transform);
+        UnitHasComeToFlag?.Invoke(unit, transform);
         _priorityOnBase = false;
-        Destroy(_flagSpawner.gameObject);
+        Destroy(_flagManager.gameObject);
     }
 }

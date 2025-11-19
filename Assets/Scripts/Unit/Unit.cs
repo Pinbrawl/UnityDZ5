@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -22,17 +21,14 @@ public class Unit : MonoBehaviour
     {
         _pickUpper.PickUped += ProcessPickUp;
         _pickUpper.Gived += StopGoTo;
+        _mover.MoveChanged += OnMoveChanged;
     }
 
     private void OnDisable()
     {
         _pickUpper.PickUped -= ProcessPickUp;
         _pickUpper.Gived -= StopGoTo;
-    }
-
-    private void ProcessPickUp()
-    {
-        ItemPickUpped?.Invoke(this);
+        _mover.MoveChanged -= OnMoveChanged;
     }
 
     public void StartGoToItem(Item item)
@@ -56,5 +52,16 @@ public class Unit : MonoBehaviour
         IsRun?.Invoke(true);
 
         _mover.StartGoTo(obj);
+    }
+
+    private void ProcessPickUp()
+    {
+        ItemPickUpped?.Invoke(this);
+    }
+
+    private void OnMoveChanged(bool sended)
+    {
+        Sended = sended;
+        IsRun?.Invoke(sended);
     }
 }

@@ -5003,7 +5003,7 @@ MonoBehaviour:
   _itemStorage: {fileID: 6646928241514590864}
   _unitSpawner: {fileID: 5082849918721998236}
   _flag: {fileID: 6161870498850027688}
-  _flagSpawner: {fileID: 7898062531957082679}
+  _flagManager: {fileID: 7898062531957082679}
   _units: []
   _unitPrice: 3
   _basePrice: 10
@@ -5441,7 +5441,7 @@ GameObject:
   - component: {fileID: 6069215753531743159}
   - component: {fileID: 7898062531957082679}
   m_Layer: 3
-  m_Name: FlagSpawner
+  m_Name: FlagManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5551,6 +5551,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6673763450989852509}
     m_Modifications:
+    - target: {fileID: -3629320437654141306, guid: c456ffabed9ba7b4d98fe444ffc7c64e, type: 3}
+      propertyPath: _flagManager
+      value: 
+      objectReference: {fileID: 7898062531957082679}
     - target: {fileID: 6880439766279109151, guid: c456ffabed9ba7b4d98fe444ffc7c64e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
